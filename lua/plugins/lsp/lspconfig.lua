@@ -6,8 +6,8 @@ return {
         {'antosha417/nvim-lsp-file-operations', config = true},
     },
     config = function()
-        local lspconfig = require('lspconfig')
         local cmp_nvim_lsp = require('cmp_nvim_lsp')
+        local lspconfig = require("lspconfig")
         local keymap = vim.keymap
         local opts = { noremap = true, silent = true}
         local on_attach = function(client, bufnr)
@@ -32,13 +32,27 @@ return {
             opts.desc = 'Show buffer diagnostics'
             keymap.set('n', '<leader>D', '<cmd>Telescope diagnostics bufnr=0<CR>', opts)
 
-            opts.desc = 'Show line diagnostics'
-            keymap.set('n', '<leader>d', vim.diagnostics.open_float, opts)
+             -- opts.desc = 'Show line diagnostics'
+             -- keymap.set('n', '<leader>d', vim.diagnostics.open_float, opts)
 
             opts.desc = 'Restart LSP'
             keymap.set('n', '<leader>rs', ':LspRestart<CR', opts)
         end
-
         local capabilities = cmp_nvim_lsp.default_capabilities()
+        local signs = { Error = "E", Warn = "W", Hint = "H", Info = "I"}
+        for type, icon in pairs(signs) do
+            local hl = "DiagnosticSign" -- type
+            vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+        end
+
+        lspconfig["clangd"].setup({
+            capabilities = capabilities,
+            on_attach = on_attach,
+        })
+        lspconfig["pyright"].setup({
+            capabilities = capabilities,
+            on_attach = on_attach,
+        })
+        
     end,
 }

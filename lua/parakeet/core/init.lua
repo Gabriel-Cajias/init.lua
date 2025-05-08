@@ -18,4 +18,5 @@ vim.opt.cursorline = on
 vim.opt.hlsearch = true 
 vim.opt.ignorecase = true
 
+vim.cmd 'set cc=80'
 vim.cmd 'colorscheme gruvbox'
